@@ -8,34 +8,36 @@ namespace Practice
         {
             // Basic properties
             var weekLength = firstWeek.Length;
-            var maxMove = weekLength - washDays;
 
-            // Iterate through first week tracking index for each key
+            // Iterate through first week tracking index for each key then
+            // the second week to track how far forward a shirt has shifted.
+            //
+            // Note: Could optimize this by combinging the two for loops, but
+            // I (Roy) think that this code is clearer with two separate loops.
             var deltas = new int[weekLength];
             for (var i = 0; i < weekLength; i++)
             {
                 var shirtId = firstWeek[i];
                 deltas[shirtId-1] = i;
             }
-
-            // Iterate through second week tracking the spread from that key in first week
             for (var i = 0; i < weekLength; i++)
             {
                 var shirtId = lastWeek[i];
                 deltas[shirtId-1] -= i;
             }
 
-            // Find largest spread
-            var largestMoveNeeded = deltas.Max();
-
-            // Use this spread to determine how long it takes to shift
+            // Find largest delta and use it to determine how many weeks are
+            // needed to acheive that spread.
             //
-            // Extra math in this implements ceil of largestMoveNeeded / maxMove in int math.
+            // Note: Extra terms when calculating num weeks are used to
+            // provide the equivalent of ceil(largestMoveNeeded / maxMove)
+            // directly on integers.
+            var largestMoveNeeded = deltas.Max();
+            var maxMove = weekLength - washDays;
             var numWeeks = (largestMoveNeeded + maxMove - 1) / maxMove;
 
-            // Account for starting point
+            // Account for starting week.
             var initialWeek = 1;
-
             return numWeeks + initialWeek;
         }
     }
